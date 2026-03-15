@@ -7,6 +7,13 @@
 
 Reference **Robotico.Resilience** when you use **retry/circuit breaker with Result**. Minimal API: static `Retry.ExecuteAsync(Func<Task<Result>>)` returning `Result`.
 
+## Robotico dependencies
+
+```mermaid
+flowchart LR
+  A[Robotico.Resilience] --> B[Robotico.Result]
+```
+
 ## Installation
 
 ```bash
