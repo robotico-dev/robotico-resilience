@@ -1,0 +1,21 @@
+# Build
+[Dd]ebug/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+[Bb]uild/
+*.log
+# NuGet
+*.nupkg
+*.snupkg
+artifacts/
+packages/
+# Test / coverage
+[Tt]est[Rr]esult*/
+[Cc]overage/
+# IDE / OS
+.vs/
+.idea/
+*.user
+.DS_Store

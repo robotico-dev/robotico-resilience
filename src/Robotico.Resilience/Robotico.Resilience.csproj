@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Robotico.Resilience</RootNamespace>
+    <AssemblyName>Robotico.Resilience</AssemblyName>
+    <PackageProjectUrl>https://github.com/robotico-dev/robotico-resilience-csharp</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/robotico-dev/robotico-resilience-csharp</RepositoryUrl>
+    <RepositoryBranch>main</RepositoryBranch>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" Visible="false" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UseLocalRoboticoResult)' != 'true'">
+    <PackageReference Include="Robotico.Result" Version="1.*" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UseLocalRoboticoResult)' == 'true'">
+    <ProjectReference Include="$(RoboticoResultPath)" />
+  </ItemGroup>
+</Project>

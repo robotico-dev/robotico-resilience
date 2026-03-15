@@ -1,0 +1,29 @@
+<Project>
+  <PropertyGroup>
+    <RoboticoResultPath Condition="'$(RoboticoResultPath)' == ''">$(MSBuildThisFileDirectory)..\robotico-results-csharp\src\Robotico.Result\Robotico.Result.Lib.csproj</RoboticoResultPath>
+    <UseLocalRoboticoResult Condition="Exists('$(RoboticoResultPath)')">true</UseLocalRoboticoResult>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningLevel>8</WarningLevel>
+    <AnalysisLevel>latest-all</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Version>1.0.0</Version>
+    <Authors>Robotico</Authors>
+    <Company>Robotico</Company>
+    <Product>Robotico.Resilience</Product>
+    <Copyright>Copyright © Robotico</Copyright>
+    <RepositoryType>git</RepositoryType>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <PackageId>Robotico.Resilience</PackageId>
+    <Title>Robotico.Resilience</Title>
+    <Description>Retry and resilience for .NET with Result. Static Retry.ExecuteAsync(Func&lt;Task&lt;Result&gt;&gt;) returning Result. Depends on Robotico.Result.</Description>
+    <PackageTags>retry;resilience;circuit-breaker;robotico</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+</Project>
