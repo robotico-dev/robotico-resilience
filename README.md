@@ -1,12 +1,19 @@
 # Robotico.Resilience
 
-Retry and circuit breaker for operations that return **Robotico.Result**. .NET 8 and .NET 10. Depends only on Robotico.Result.
-
 [![.NET 8](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com/download/dotnet/8.0)
 [![.NET 10](https://img.shields.io/badge/.NET-10.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com/download/dotnet/10.0)
 [![C#](https://img.shields.io/badge/C%23-12-239120?logo=csharp)](https://learn.microsoft.com/en-us/dotnet/csharp/)
 [![GitHub Packages](https://img.shields.io/badge/GitHub%20Packages-Robotico.Resilience-blue?logo=github)](https://github.com/robotico-dev/robotico-resilience-csharp/packages)
 [![Build](https://github.com/robotico-dev/robotico-resilience-csharp/actions/workflows/publish.yml/badge.svg)](https://github.com/robotico-dev/robotico-resilience-csharp/actions/workflows/publish.yml)
+
+Retry and circuit breaker for .NET 8 and .NET 10. Operations return **Robotico.Result** for explicit success/error handling. Depends only on Robotico.Result.
+
+## Robotico dependencies
+
+```mermaid
+flowchart LR
+  A[Robotico.Resilience] --> B[Robotico.Result]
+```
 
 ## Features
 
@@ -16,9 +23,20 @@ Retry and circuit breaker for operations that return **Robotico.Result**. .NET 8
 
 ## Installation
 
+Add the GitHub Packages NuGet source (once per machine) so both packages can be restored:
+
+```bash
+dotnet nuget add source "https://nuget.pkg.github.com/robotico-dev/index.json" --name github --username YOUR_GITHUB_USERNAME --password YOUR_GITHUB_PAT --store-password-in-clear-text
+```
+
+Then add the packages:
+
 ```bash
 dotnet add package Robotico.Resilience
+dotnet add package Robotico.Result
 ```
+
+**Robotico.Result** is published at [GitHub Packages (robotico-dev/robotico-results)](https://github.com/robotico-dev/robotico-results/pkgs/nuget/Robotico.Result). **Robotico.Resilience** is published at [GitHub Packages (robotico-dev/robotico-resilience-csharp)](https://github.com/robotico-dev/robotico-resilience-csharp/pkgs/nuget/Robotico.Resilience).
 
 ## Quick start
 
@@ -75,17 +93,17 @@ clock.Advance(TimeSpan.FromSeconds(15));  // no Task.Delay
 var result = await cb.ExecuteAsync(() => Task.FromResult(Result.Success()));
 ```
 
-## Versioning
-
-We follow [Semantic Versioning](https://semver.org/). Version **1.0.0** is the first stable release. No breaking changes in minor/patch versions.
-
 ## Documentation
 
-Full contract and design: see **`docs/design.adoc`**. See this README for usage and examples; the library follows the same quality bar as **Robotico.Result**. Design details (circuit breaker state machine, retry semantics, thread-safety, error contract) are in `docs/design.adoc`.
+Detailed contract and design are in the `docs/` folder (AsciiDoc):
 
-**Public API:** This library uses `Microsoft.CodeAnalysis.PublicApiAnalyzers`. To populate `PublicAPI.Shipped.txt`, apply the code fix "Add to PublicAPI.Unshipped" (Fix All in project), then at release move entries to `PublicAPI.Shipped.txt`.
+- **Design** (`docs/design.adoc`) — Circuit breaker state machine, retry semantics, thread-safety, error contract, versioning
 
-**Analyzer suppressions:** `RS0026` is suppressed for `Retry.ExecuteAsync` (multiple overloads with optional parameters are intentional; see .csproj).
+To build HTML from the AsciiDoc sources (e.g. with Asciidoctor):
+
+```bash
+asciidoctor docs/design.adoc -o docs/design.html
+```
 
 ## Building and testing
 
@@ -97,25 +115,41 @@ dotnet build -c Release
 dotnet test tests/Robotico.Resilience.Tests/Robotico.Resilience.Tests.csproj -c Release
 ```
 
-With coverage:
+To run tests with code coverage (Coverlet; optional gate: fail if line coverage &lt; 90%):
 
 ```bash
 dotnet test tests/Robotico.Resilience.Tests/Robotico.Resilience.Tests.csproj -c Release --collect:"XPlat Code Coverage"
+# With threshold (CI): dotnet test ... -c Release --collect:"XPlat Code Coverage" /p:CollectCoverage=true /p:Threshold=90 /p:ThresholdType=line
 ```
 
-Optional CI gate (fail if line coverage below threshold):
+To run benchmarks (optional; from the repo root; requires building the benchmark project first):
 
 ```bash
-dotnet test tests/Robotico.Resilience.Tests/Robotico.Resilience.Tests.csproj -c Release --collect:"XPlat Code Coverage" /p:CollectCoverage=true /p:Threshold=90 /p:ThresholdType=line
-```
-
-Run benchmarks (BenchmarkDotNet). **Recommended: run benchmarks in CI to catch performance regressions.**
-
-```bash
+dotnet build benchmarks/Robotico.Resilience.Benchmarks/Robotico.Resilience.Benchmarks.csproj -c Release
 dotnet run -c Release -p benchmarks/Robotico.Resilience.Benchmarks/Robotico.Resilience.Benchmarks.csproj -- --filter "*"
 ```
 
-Or open `robotico-resilience.slnx` in your IDE and build from there.
+If you see an "Ambiguous project name" error when building the benchmark project, build from the repository root (e.g. in a clone of [robotico-dev/robotico-resilience-csharp](https://github.com/robotico-dev/robotico-resilience-csharp)).
+
+## Analyzer suppressions (NoWarn)
+
+The library intentionally suppresses the following analyzers; rationale is documented here for principal-grade transparency:
+
+| Code | Rationale |
+|------|------------|
+| **RS0026** | `Retry.ExecuteAsync` has multiple overloads with optional parameters; the analyzer's suggestion would reduce API usability. |
+
+All other warnings are treated as errors (`TreatWarningsAsErrors`). See `Directory.Build.props` and `.csproj` for the full build bar.
+
+**Public API:** This library uses `Microsoft.CodeAnalysis.PublicApiAnalyzers`. To populate `PublicAPI.Shipped.txt`, apply the code fix "Add to PublicAPI.Unshipped" (Fix All in project), then at release move entries to `PublicAPI.Shipped.txt`.
+
+## Dependencies
+
+- **Robotico.Result**: Success/error results ([GitHub Packages](https://github.com/robotico-dev/robotico-results/pkgs/nuget/Robotico.Result))
+
+## Versioning
+
+We follow [Semantic Versioning](https://semver.org/). Version **1.0.0** is the first stable release. No breaking changes in minor/patch versions.
 
 ## License
 

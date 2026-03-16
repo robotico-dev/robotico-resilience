@@ -74,7 +74,7 @@ public sealed class ResilienceLawsTests
     public async Task CircuitBreaker_closed_success_resets_failure_count()
     {
         CircuitBreakerOptions options = CircuitBreakerOptions.Create(failureThreshold: 3, breakDuration: TimeSpan.FromMinutes(1));
-        CircuitBreaker cb = new CircuitBreaker(options);
+        CircuitBreaker cb = new(options);
         await cb.ExecuteAsync(() => Task.FromResult(Robotico.Result.Result.Error(new SimpleError("1"))));
         await cb.ExecuteAsync(() => Task.FromResult(Robotico.Result.Result.Success()));
         await cb.ExecuteAsync(() => Task.FromResult(Robotico.Result.Result.Error(new SimpleError("2"))));
@@ -84,9 +84,9 @@ public sealed class ResilienceLawsTests
     [Fact]
     public async Task CircuitBreaker_open_after_threshold_failures_then_half_open_after_break_duration()
     {
-        ManualClock clock = new ManualClock();
+        ManualClock clock = new();
         CircuitBreakerOptions options = CircuitBreakerOptions.Create(failureThreshold: 2, breakDuration: TimeSpan.FromMinutes(1), clock: clock);
-        CircuitBreaker cb = new CircuitBreaker(options);
+        CircuitBreaker cb = new(options);
         await cb.ExecuteAsync(() => Task.FromResult(Robotico.Result.Result.Error(new SimpleError("1"))));
         await cb.ExecuteAsync(() => Task.FromResult(Robotico.Result.Result.Error(new SimpleError("2"))));
         Assert.Equal(CircuitState.Open, cb.State);
@@ -100,9 +100,9 @@ public sealed class ResilienceLawsTests
     [Fact]
     public async Task CircuitBreaker_half_open_failure_reopens_circuit()
     {
-        ManualClock clock = new ManualClock();
+        ManualClock clock = new();
         CircuitBreakerOptions options = CircuitBreakerOptions.Create(failureThreshold: 1, breakDuration: TimeSpan.FromSeconds(1), clock: clock);
-        CircuitBreaker cb = new CircuitBreaker(options);
+        CircuitBreaker cb = new(options);
         await cb.ExecuteAsync(() => Task.FromResult(Robotico.Result.Result.Error(new SimpleError("1"))));
         Assert.Equal(CircuitState.Open, cb.State);
 

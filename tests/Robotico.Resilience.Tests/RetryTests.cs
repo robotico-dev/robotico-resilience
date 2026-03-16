@@ -16,7 +16,7 @@ public sealed class RetryTests
     [Fact]
     public async Task ExecuteAsync_no_policy_returns_error_when_operation_fails()
     {
-        SimpleError err = new SimpleError("fail");
+        SimpleError err = new("fail");
         Robotico.Result.Result r = await Retry.ExecuteAsync(() => Task.FromResult(Robotico.Result.Result.Error(err)));
         Assert.False(r.IsSuccess());
         r.IsError(out Robotico.Result.Errors.IError? e);
@@ -65,12 +65,12 @@ public sealed class RetryTests
     {
         RetryPolicy policy = RetryPolicy.Create(maxAttempts: 3);
         int calls = 0;
-        SimpleError lastError = new SimpleError("third");
+        SimpleError lastError = new("third");
         Robotico.Result.Result r = await Retry.ExecuteAsync(
             () =>
             {
                 calls++;
-                SimpleError e = new SimpleError("fail " + calls);
+                SimpleError e = new("fail " + calls);
                 if (calls == 3)
                 {
                     lastError = e;
@@ -95,7 +95,7 @@ public sealed class RetryTests
     [Fact]
     public async Task ExecuteAsync_cancellation_before_first_call()
     {
-        using CancellationTokenSource cts = new CancellationTokenSource();
+        using CancellationTokenSource cts = new();
         cts.Cancel();
         await Assert.ThrowsAsync<OperationCanceledException>(() =>
             Retry.ExecuteAsync(() => Task.FromResult(Robotico.Result.Result.Success()), null, cts.Token));
