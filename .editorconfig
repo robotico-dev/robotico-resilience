@@ -13,3 +13,9 @@ dotnet_diagnostic.IDE0008.severity = error
 csharp_style_var_for_built_in_types = false:error
 csharp_style_var_when_type_is_apparent = false:error
 csharp_style_var_elsewhere = false:error
+# Enforce braces for all control blocks
+csharp_prefer_braces = true:warning
+# CA2007: Do not directly await a Task (use ConfigureAwait in library code)
+dotnet_diagnostic.CA2007.severity = warning
+# CA1305: Specify IFormatProvider for culture-dependent operations (culture-explicit).
+dotnet_diagnostic.CA1305.severity = warning

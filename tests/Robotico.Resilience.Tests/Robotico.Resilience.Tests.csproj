@@ -5,7 +5,8 @@
     <PackageId>Robotico.Resilience.Tests</PackageId>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
-    <NoWarn>$(NoWarn);CA1707;CS1591</NoWarn>
+    <!-- CA1707/CA1515: Test naming and discovery. -->
+    <NoWarn>$(NoWarn);CA1707;CA1515</NoWarn>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
