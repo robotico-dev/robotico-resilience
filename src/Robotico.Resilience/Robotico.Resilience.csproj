@@ -1,7 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <!-- RS0016/RS0017: Public API tracking; run code fix to populate PublicAPI.Unshipped.txt, then move to Shipped at release. RS0026: Retry.ExecuteAsync overloads with optional params are intentional. -->
+    <NoWarn>$(NoWarn);RS0016;RS0017;RS0026</NoWarn>
     <RootNamespace>Robotico.Resilience</RootNamespace>
     <AssemblyName>Robotico.Resilience</AssemblyName>
+    <PackageIcon>logosquare.png</PackageIcon>
     <PackageProjectUrl>https://github.com/robotico-dev/robotico-resilience-csharp</PackageProjectUrl>
     <RepositoryUrl>https://github.com/robotico-dev/robotico-resilience-csharp</RepositoryUrl>
     <RepositoryBranch>main</RepositoryBranch>
@@ -11,14 +14,22 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\..\README.md" Pack="true" PackagePath="\" Visible="false" />
+    <!-- Package icon: single source at repo assets. -->
+    <None Include="..\..\assets\logosquare.png" Pack="true" PackagePath="\" Link="logosquare.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup Condition="'$(UseLocalRoboticoResult)' != 'true'">
-    <PackageReference Include="Robotico.Result" Version="1.*" />
+    <PackageReference Include="Robotico.Result" />
   </ItemGroup>
   <ItemGroup Condition="'$(UseLocalRoboticoResult)' == 'true'">
     <ProjectReference Include="$(RoboticoResultPath)" />
+  </ItemGroup>
+  <!-- IDE0130 (namespace match folder) needs these for command-line builds. -->
+  <ItemGroup>
+    <CompilerVisibleProperty Include="RootNamespace" />
+    <CompilerVisibleProperty Include="ProjectDir" />
   </ItemGroup>
 </Project>

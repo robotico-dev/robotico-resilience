@@ -5,6 +5,9 @@
   <Folder Name="/tests/">
     <Project Path="tests/Robotico.Resilience.Tests/Robotico.Resilience.Tests.csproj" />
   </Folder>
+  <Folder Name="/benchmarks/">
+    <Project Path="benchmarks/Robotico.Resilience.Benchmarks/Robotico.Resilience.Benchmarks.csproj" />
+  </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".gitignore" />
     <File Path=".editorconfig" />

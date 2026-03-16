@@ -1,7 +1,8 @@
 <Project>
-  <PropertyGroup>
-    <RoboticoResultPath Condition="'$(RoboticoResultPath)' == ''">$(MSBuildThisFileDirectory)..\robotico-results-csharp\src\Robotico.Result\Robotico.Result.Lib.csproj</RoboticoResultPath>
-    <UseLocalRoboticoResult Condition="Exists('$(RoboticoResultPath)')">true</UseLocalRoboticoResult>
+  <!-- When building in a workspace that contains robotico-results-csharp, use project reference instead of NuGet. -->
+  <PropertyGroup Condition="Exists('$(MSBuildThisFileDirectory)../robotico-results-csharp/src/Robotico.Result/Robotico.Result.Lib.csproj')">
+    <UseLocalRoboticoResult>true</UseLocalRoboticoResult>
+    <RoboticoResultPath>$(MSBuildThisFileDirectory)../robotico-results-csharp/src/Robotico.Result/Robotico.Result.Lib.csproj</RoboticoResultPath>
   </PropertyGroup>
   <PropertyGroup>
     <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
@@ -9,6 +10,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <NoWarn>$(NoWarn)</NoWarn>
     <WarningLevel>8</WarningLevel>
     <AnalysisLevel>latest-all</AnalysisLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
@@ -20,10 +22,11 @@
     <Copyright>Copyright © Robotico</Copyright>
     <RepositoryType>git</RepositoryType>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisMode>All</AnalysisMode>
     <PackageId>Robotico.Resilience</PackageId>
     <Title>Robotico.Resilience</Title>
-    <Description>Retry and resilience for .NET with Result. Static Retry.ExecuteAsync(Func&lt;Task&lt;Result&gt;&gt;) returning Result. Depends on Robotico.Result.</Description>
-    <PackageTags>retry;resilience;circuit-breaker;robotico</PackageTags>
+    <Description>Retry and circuit breaker for operations that return Result. Depends only on Robotico.Result. RetryPolicy, Retry.ExecuteAsync, CircuitBreaker.</Description>
+    <PackageTags>retry;circuit-breaker;resilience;result;robotico</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 </Project>

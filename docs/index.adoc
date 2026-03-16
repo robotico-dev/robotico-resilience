@@ -1,0 +1,21 @@
+= Robotico.Resilience — Documentation
+:toc: left
+:toclevels: 3
+:sectnums:
+:icons: font
+
+Retry and circuit breaker for operations that return Robotico.Result. .NET 8 and .NET 10.
+
+== Quick links
+
+* link:design.adoc[Design] — Circuit breaker state machine, retry semantics, thread-safety, error contract, testing with IClock.
+* link:../README.md[README] — Installation, quick start, configuration, building and testing.
+
+== Building the docs
+
+These docs are written in AsciiDoc. To produce HTML (e.g. with Asciidoctor):
+
+----
+asciidoctor docs/index.adoc -o docs/index.html
+asciidoctor docs/design.adoc -o docs/design.html
+----

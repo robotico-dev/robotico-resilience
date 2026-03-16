@@ -1,0 +1,95 @@
+= Robotico.Resilience — Design
+:toc: left
+:toclevels: 3
+:sectnums:
+:icons: font
+
+This document explains the design of Robotico.Resilience: retry semantics, circuit breaker state machine, thread-safety, and testing with a custom clock.
+
+== Overview
+
+Robotico.Resilience provides:
+
+* **Retry** — Execute an operation that returns `Robotico.Result.Result`; retry only when the result is an error, with configurable max attempts and optional delay.
+* **CircuitBreaker** — Track consecutive failures; open the circuit after a threshold, then allow one trial after a break duration (HalfOpen). Thread-safe for typical single-instance usage.
+
+Both APIs work with `Robotico.Result.Result`; success is returned immediately; only errors drive retries or circuit state.
+
+== Retry
+
+=== Semantics
+
+* The operation is a `Func<Task<Result>>`. It may be invoked multiple times when the result is an error.
+* Retries occur *only when the result is an error*. A successful result is returned immediately; no retry.
+* **RetryPolicy** configures:
+  * `MaxAttempts` — Total attempts (first try + retries). Must be >= 1.
+  * `DelayBetweenAttempts` — Optional delay before each retry.
+  * `OnRetry` — Optional callback `(attempt, lastError)` for logging or metrics.
+* If `policy` is null in `Retry.ExecuteAsync(operation, policy, cancellationToken)`, a default policy is used (3 attempts, no delay).
+* Cancellation is observed before each attempt and during any delay. If the token is canceled, `OperationCanceledException` is thrown.
+
+=== Usage
+
+[source,csharp]
+----
+var result = await Retry.ExecuteAsync(
+    () => SomeOperationAsync(),
+    RetryPolicy.Create(maxAttempts: 5, delayBetweenAttempts: TimeSpan.FromSeconds(1)),
+    cancellationToken);
+----
+
+== Circuit breaker
+
+=== State machine
+
+The circuit has three states:
+
+| State | Meaning | Behavior |
+|-------|----------|----------|
+| **Closed** | Normal operation | Execute the operation. On success, reset failure count. On failure, increment count; if count >= threshold, transition to Open. |
+| **Open** | Failing fast | Do *not* call the operation. Return a failed Result with error code `CIRCUIT_OPEN` and message "Circuit breaker is open." After `BreakDuration` has elapsed, transition to HalfOpen. |
+| **HalfOpen** | Trial | Allow one call through. Success → Closed (reset failures). Failure → Open (and record open time again). |
+
+* **Closed → Open**: When consecutive failures reach `FailureThreshold` (from `CircuitBreakerOptions`).
+* **Open → HalfOpen**: After `BreakDuration` has passed since the circuit opened. Time is provided by `IClock` (default: `SystemClock`).
+* **HalfOpen → Closed**: On the first success after opening.
+* **HalfOpen → Open**: On the first failure after opening.
+
+=== Options
+
+* **FailureThreshold** — Number of consecutive failures before opening. Must be >= 1.
+* **BreakDuration** — Time the circuit stays Open before allowing a trial (HalfOpen). Default 30 seconds.
+* **OnCircuitStateChange** — Optional callback when state changes (e.g. Closed → Open). Use for logging or metrics.
+* **Clock** — Optional `IClock` for "now". When null, `SystemClock` is used. Inject a test double in tests to avoid real delays.
+
+=== Error contract when circuit is Open
+
+When the circuit is Open and a call is made to `ExecuteAsync`, the operation is *not* invoked. The method returns:
+
+* `Result.Error(SimpleError)` with:
+  * Message: `"Circuit breaker is open."`
+  * Code: `"CIRCUIT_OPEN"`
+  * Severity: `ErrorSeverity.Error`
+
+Callers can detect this with `result.IsError(out var err)` and inspect the code for routing or logging.
+
+=== Thread-safety
+
+`CircuitBreaker` is thread-safe for typical single-instance usage: state transitions and failure counting are guarded by an internal lock. Multiple threads may call `ExecuteAsync` concurrently; only one call is allowed through in HalfOpen.
+
+`Reset()` is also thread-safe and forces the circuit back to Closed with zero failures.
+
+== Testing with IClock
+
+To test circuit breaker timing without `Task.Delay` or real time:
+
+1. Implement `IClock` (e.g. a `ManualClock` that returns a controllable time).
+2. Pass it via `CircuitBreakerOptions.Create(..., clock: myClock)`.
+3. Construct `CircuitBreaker` with those options.
+4. In tests, advance the clock after opening the circuit so that `GetUtcNow() - _openedAt >= BreakDuration` becomes true and the circuit moves to HalfOpen.
+
+The library does not ship a `ManualClock`; tests can define their own (see test project for an example).
+
+== Related
+
+* link:../README.md[README] — quick start and API summary.

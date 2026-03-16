@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Robotico.Resilience.Benchmarks</RootNamespace>
+    <AssemblyName>Robotico.Resilience.Benchmarks</AssemblyName>
+    <IsPackable>false</IsPackable>
+    <TargetFrameworks>net8.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>true</ImplicitUsings>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <PackageId>Robotico.Resilience.Benchmarks</PackageId>
+    <NoWarn>$(NoWarn);CA1707;CA1515;CA1822;CA2007;IDE0005</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Robotico.Resilience\Robotico.Resilience.csproj" />
+  </ItemGroup>
+</Project>
