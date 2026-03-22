@@ -4,29 +4,23 @@
     <UseLocalRoboticoResult>true</UseLocalRoboticoResult>
     <RoboticoResultPath>$(MSBuildThisFileDirectory)../robotico-results-csharp/src/Robotico.Result/Robotico.Result.Lib.csproj</RoboticoResultPath>
   </PropertyGroup>
+
+  <!--
+    Path on disk to Robotico.Library.Shared.props (file in this repo, or monorepo csharp/). Build-only — not a NuGet reference; package consumers never load this.
+  -->
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
-    <LangVersion>latest</LangVersion>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <_RoboticoSharedMsbuildImport Condition="Exists('$(MSBuildThisFileDirectory)Robotico.Library.Shared.props')">$(MSBuildThisFileDirectory)Robotico.Library.Shared.props</_RoboticoSharedMsbuildImport>
+    <_RoboticoSharedMsbuildImport Condition="'$(_RoboticoSharedMsbuildImport)' == ''">$([MSBuild]::GetPathOfFileAbove('Robotico.Library.Shared.props', '$(MSBuildThisFileDirectory)'))</_RoboticoSharedMsbuildImport>
+  </PropertyGroup>
+  <Import Project="$(_RoboticoSharedMsbuildImport)" Condition="'$(_RoboticoSharedMsbuildImport)' != ''" />
+
+  <PropertyGroup>
     <NoWarn>$(NoWarn)</NoWarn>
-    <WarningLevel>8</WarningLevel>
-    <AnalysisLevel>latest-all</AnalysisLevel>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Version>1.0.0</Version>
-    <Authors>Robotico</Authors>
-    <Company>Robotico</Company>
     <Product>Robotico.Resilience</Product>
-    <Copyright>Copyright © Robotico</Copyright>
-    <RepositoryType>git</RepositoryType>
-    <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <AnalysisMode>All</AnalysisMode>
     <PackageId>Robotico.Resilience</PackageId>
     <Title>Robotico.Resilience</Title>
     <Description>Retry and circuit breaker for operations that return Result. Depends only on Robotico.Result. RetryPolicy, Retry.ExecuteAsync, CircuitBreaker.</Description>
     <PackageTags>retry;circuit-breaker;resilience;result;robotico</PackageTags>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 </Project>

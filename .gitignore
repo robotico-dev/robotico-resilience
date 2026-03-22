@@ -1,3 +1,5 @@
+# Repo-root Robotico.Library.*.props are vendored MSBuild defaults (standalone GitHub CI).
+
 # Build
 [Dd]ebug/
 [Rr]elease/
@@ -5,17 +7,55 @@
 [Oo]bj/
 [Oo]ut/
 [Bb]uild/
+[Bb]uildResult/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+msbuild.binlog
 *.log
+
+# Visual Studio
+.vs/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.sln.docstates
+
 # NuGet
 *.nupkg
 *.snupkg
+*.nuget.props
+*.nuget.targets
+project.lock.json
+project.fragment.lock.json
 artifacts/
 packages/
+
 # Test / coverage
 [Tt]est[Rr]esult*/
 [Cc]overage/
-# IDE / OS
-.vs/
+*.coverage
+*.coveragexml
+coverage*.json
+coverage*.xml
+
+# BenchmarkDotNet
+BenchmarkDotNet.Artifacts/
+
+# IDE / Editor
 .idea/
-*.user
+*.swp
+*~
+
+# OS
 .DS_Store
+Thumbs.db
+
+# CodeRush
+*.cr.userlog
+
+# Doc build (if any)
+doc/build/

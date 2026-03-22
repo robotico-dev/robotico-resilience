@@ -1,0 +1,23 @@
+<Project>
+  <!--
+    Language-version-agnostic analyzer and packaging defaults shared by all Robotico C# projects.
+    Import from Robotico.Library.Shared.props (multi-TFM libraries) or standalone repos (e.g. single-TFM CLI).
+    A copy lives in each package repo; run csharp/tools/sync-robotico-library-props.ps1 after editing this file.
+  -->
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningLevel>8</WarningLevel>
+    <AnalysisLevel>latest-all</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Authors>Robotico</Authors>
+    <Company>Robotico</Company>
+    <Copyright>Copyright © Robotico</Copyright>
+    <RepositoryType>git</RepositoryType>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisMode>All</AnalysisMode>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+</Project>

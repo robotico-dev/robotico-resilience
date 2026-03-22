@@ -62,6 +62,11 @@ csharp_style_var_when_type_is_apparent = false:error
 csharp_style_var_elsewhere = false:error
 
 # -----------------------------------------------------------------------------
+# File discipline — one top-level type per .cs file; validate with csharp/tools/find-multi-type-files.ps1 (see build/ROBOTICO_LIBRARY_10_STANDARD.adoc)
+# -----------------------------------------------------------------------------
+# (Enforced by convention + CI script; keep nested types out of production sources.)
+
+# -----------------------------------------------------------------------------
 # Expression-bodied members
 # -----------------------------------------------------------------------------
 csharp_style_expression_bodied_methods = when_on_single_line:suggestion

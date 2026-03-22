@@ -1,0 +1,26 @@
+<Project>
+
+  <!--
+
+    Shared library defaults for Robotico C# packages under this workspace.
+
+    Each package repo also contains a copy (GitHub/standalone); Directory.Build.props
+    prefers that path, then GetPathOfFileAbove for monorepo csharp/ layout. After edits
+    here, run csharp/tools/sync-robotico-library-props.ps1.
+
+  -->
+
+  <Import Project="$(MSBuildThisFileDirectory)Robotico.Library.AnalyzerDefaults.props" />
+
+
+
+  <PropertyGroup>
+
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+
+    <LangVersion>latest</LangVersion>
+
+  </PropertyGroup>
+
+</Project>
+
