@@ -9,7 +9,11 @@ public sealed class CircuitBreaker
 {
     private readonly CircuitBreakerOptions _options;
     private readonly IClock _clock;
+#if NET10_0_OR_GREATER
+    private readonly Lock _lock = new();
+#else
     private readonly object _lock = new();
+#endif
     private int _consecutiveFailures;
     private CircuitState _state = CircuitState.Closed;
     private DateTimeOffset _openedAt;

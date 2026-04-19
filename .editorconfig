@@ -139,7 +139,21 @@ dotnet_diagnostic.IDE0034.severity = warning
 dotnet_diagnostic.IDE0037.severity = warning
 dotnet_diagnostic.IDE0041.severity = warning
 dotnet_diagnostic.IDE0049.severity = warning
-dotnet_diagnostic.IDE0090.severity = warning
+csharp_style_implicit_object_creation_when_type_is_apparent = true:error
+dotnet_diagnostic.IDE0090.severity = error
+
+# Collection expressions (C# 12+) — IDE0301
+csharp_style_prefer_collection_expression = true:error
+dotnet_diagnostic.IDE0301.severity = error
+
+# Prefer System.Threading.Lock (.NET 9+) - IDE0330
+csharp_prefer_system_threading_lock = true:error
+dotnet_diagnostic.IDE0330.severity = error
+
+# Meziantou.Analyzer - MA0004 / MA0042 / MA0155
+dotnet_diagnostic.MA0004.severity = error
+dotnet_diagnostic.MA0042.severity = error
+dotnet_diagnostic.MA0155.severity = error
 # Async: ConfigureAwait in library code.
 dotnet_diagnostic.CA2007.severity = warning
 # Validate arguments of public methods (null/range checks).

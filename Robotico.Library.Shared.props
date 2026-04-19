@@ -22,5 +22,18 @@
 
   </PropertyGroup>
 
+  <!--
+    Monorepo local NuGet feed (csharp/nugets): set environment variable ROBOTICO_USE_LOCAL_NUGETS=true
+    and run csharp/tools/pack-robotico-tier0-local-nugets.ps1 (and later tier scripts). Standalone
+    clones on GitHub omit nuget.Local.config above the repo; GetPathOfFileAbove returns empty and
+    this block does nothing. See csharp/build/ROBOTICO_NUGET_DUAL_MODE_PLAN.adoc.
+  -->
+  <PropertyGroup>
+    <_RoboticoLocalNugetConfig>$([MSBuild]::GetPathOfFileAbove('nuget.Local.config', '$(MSBuildThisFileDirectory)'))</_RoboticoLocalNugetConfig>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(ROBOTICO_USE_LOCAL_NUGETS)' == 'true' And '$(_RoboticoLocalNugetConfig)' != '' And Exists('$(_RoboticoLocalNugetConfig)')">
+    <RestoreConfigFile>$(_RoboticoLocalNugetConfig)</RestoreConfigFile>
+  </PropertyGroup>
+
 </Project>
 

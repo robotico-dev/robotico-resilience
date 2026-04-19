@@ -20,4 +20,24 @@
     <AnalysisMode>All</AnalysisMode>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <!--
+    Meziantou.Analyzer — MA0004 (ConfigureAwait), MA0042 (blocking in async), MA0155 (async void).
+    Severity set to error in each repo’s .editorconfig. When central package management is enabled,
+    add <PackageVersion Include="Meziantou.Analyzer" Version="…" /> to Directory.Packages.props.
+  -->
+  <ItemGroup Condition="'$(ManagePackageVersionsCentrally)' == 'true'">
+    <PackageReference Include="Meziantou.Analyzer">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(ManagePackageVersionsCentrally)' != 'true'">
+    <PackageReference Include="Meziantou.Analyzer" Version="3.0.49">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)Robotico.Library.MeziantouNoWarn.props" Condition="Exists('$(MSBuildThisFileDirectory)Robotico.Library.MeziantouNoWarn.props')" />
 </Project>
